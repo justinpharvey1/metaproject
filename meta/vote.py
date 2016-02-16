@@ -18,9 +18,20 @@ def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
 
 
-    mediatype = event['type']
     mediaID = event['id']
+
+
+
+    if (str(event['type']) == "comment"): 
+        mediatype = "comments"
+
+    if (str(event['type']) == "post"):
+        mediatype = "posts"
+
+
+
     change = event['change']
+
 
 
     print("checkpoint1")
@@ -31,19 +42,33 @@ def lambda_handler(event, context):
 
 
 
-    #update vote count
-    query = ("UPDATE " + str(mediatype) + " SET votes = votes + 1 WHERE commentID = " + mediaID + ";")
-    cursor.execute(query)
-    cnx.commit()
-
-
 
     #update score
-    if (int(change) == 1):
-        query = ("UPDATE " + str(mediatype) + " set score = score +  1 WHERE commentID = " + mediaID + ";")
+    if (str(mediatype) == "comments"):
+        #update vote count
+        query = ("UPDATE " + str(mediatype) + " SET votes = votes + 1 WHERE commentID = " + mediaID + ";")
+        cursor.execute(query)
+        cnx.commit()
 
-    else: 
-        query = ("UPDATE " + str(mediatype) + " set score = score -  1 WHERE commentID = " + mediaID + ";")
+        if (int(change) == 1):
+            query = ("UPDATE " + str(mediatype) + " set score = score +  1 WHERE commentID = " + mediaID + ";")
+        else: 
+            query = ("UPDATE " + str(mediatype) + " set score = score -  1 WHERE commentID = " + mediaID + ";")
+
+
+
+
+    if (str(mediatype) == "posts"):
+        #update vote count
+        query = ("UPDATE " + str(mediatype) + " SET votes = votes + 1 WHERE postID = " + mediaID + ";")
+        cursor.execute(query)
+        cnx.commit()
+        if (int(change) == 1):
+            query = ("UPDATE " + str(mediatype) + " set score = score +  1 WHERE postID = " + mediaID + ";")
+        else: 
+            query = ("UPDATE " + str(mediatype) + " set score = score -  1 WHERE postID = " + mediaID + ";")
+
+
 
     cursor.execute(query)
     cnx.commit()

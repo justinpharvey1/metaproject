@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     print("checkpoint1")
 
 
-    cnx = mysql.connector.connect(user='masterusername', password='masterpassword', host=' mydbinstance.cctousqbj3wu.us-east-1.rds.amazonaws.com', database='records')
+    cnx = mysql.connector.connect(user='masterusername', password='masterpassword', host='mydbinstance.cctousqbj3wu.us-east-1.rds.amazonaws.com', database='records')
     cursor = cnx.cursor()
 
     query = ("INSERT INTO comments (commenttext, parentpost, parentcomment) VALUES (" + "'" + commenttext + "','" + parentpost + "','" +  parentcomment + "');")

@@ -1,3 +1,6 @@
+#The flow of this module is to first query by location. Then, take the nearby posts and filter them by image/text if applicable
+
+
 from __future__ import print_function
 
 from math import hypot
@@ -17,20 +20,25 @@ def build_comments(postID):
 
     connection = mysql.connector.connect(user='masterusername', password='masterpassword', host=' mydbinstance.cctousqbj3wu.us-east-1.rds.amazonaws.com', database='records')
     
-    query = ("SELECT commentID, commenttext, votes, score, depth from comments WHERE parentpost = " + "'" + str(postID) + "';")
+    query = ("SELECT commentID, commenttext, votes, score, depth, parentpost, parentcomment from comments WHERE parentpost = " + "'" + str(postID) + "';")
+
     cursor = connection.cursor()
     cursor.execute(query)
 
     commentlist = []
 
-    for (commentID, commenttext, votes, score, depth) in cursor:
+    for (commentID, commenttext, votes, score, depth, parentpost, parentcomment) in cursor:
+   
+
 
         commentdictionary = {}
-        commentdictionary['commentID'] = commentID
-        commentdictionary['commenttext'] = commenttext
-        commentdictionary['votes'] = votes
-        commentdictionary['score'] = score
-        commentdictionary['depth'] = depth
+        commentdictionary['parentpost'] = str(parentpost)
+        commentdictionary['parentcomment'] = str(parentcomment)
+        commentdictionary['commentID'] = str(commentID)
+        commentdictionary['commenttext'] = str(commenttext)
+        commentdictionary['votes'] = str(votes)
+        commentdictionary['score'] = str(score)
+        commentdictionary['depth'] = str(depth)
 
         commentlist.append(commentdictionary)
 
@@ -40,6 +48,10 @@ def build_comments(postID):
 
 
 
+
+def compute_text_similarity(query, titletext, bodytext): 
+
+    print ("hello world")
 
 
 
@@ -135,5 +147,9 @@ def lambda_handler(event, context):
 
 
     return(responseList)
+
+
+
+
 
    
